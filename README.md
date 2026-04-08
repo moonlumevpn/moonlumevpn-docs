@@ -29,6 +29,10 @@ Repository Structure
 Russian is the default locale and lives in `docs/`.
 Additional locales live under `i18n/<locale>/docusaurus-plugin-content-docs/current/`.
 
+Machine-readable app links registry lives at:
+`registry/links.json`
+This file is intended for bots/apps and currently contains the `legal` section.
+
 moonlumevpn-docs/
   docs/
     privacy_policy.md
@@ -107,6 +111,11 @@ jobs:
             mv external-docs/i18n ./i18n
           fi
 
+      - name: Publish links registry for apps
+        run: |
+          mkdir -p static
+          cp external-docs/registry/links.json static/links.json
+
       - name: Install dependencies
         run: npm ci
 
@@ -145,6 +154,7 @@ Docs live in `moonlumevpn-docs`
 Site auto-updates on every push
 Hosted at `https://docs.moonlumevpn.ru/`
 Multilanguage docs work with Russian as the default locale
+Apps can consume the registry from `https://docs.moonlumevpn.ru/links.json`
 
 Notes and Best Practices
 Keep docs clean and structured
