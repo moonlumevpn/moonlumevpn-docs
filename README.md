@@ -1,84 +1,116 @@
-MoonlumeVPN Documentation Platform
+<p align="center">
+  <h1 align="center">MoonlumeVPN Docs</h1>
+  <p align="center"><b>Source-of-truth documentation for MoonlumeVPN</b></p>
+  <p align="center">
+    Content repo + Docusaurus engine repo + automatic rebuild trigger.
+  </p>
+  <p align="center">
+    <img src="https://img.shields.io/badge/docs_content-markdown-blue" alt="Docs Content"/>
+    <img src="https://img.shields.io/badge/site-docusaurus-2ea44f" alt="Docusaurus"/>
+    <img src="https://img.shields.io/badge/default_locale-ru-orange" alt="Default Locale"/>
+    <img src="https://img.shields.io/badge/i18n-ready-lightgrey" alt="i18n"/>
+    <img src="https://img.shields.io/badge/registry-links.json-informational" alt="Registry"/>
+    <img src="https://img.shields.io/badge/branch-production-black" alt="Production Branch"/>
+  </p>
+  <p align="center">
+    <a href="#overview">Overview</a> •
+    <a href="#architecture">Architecture</a> •
+    <a href="#repository-structure">Structure</a> •
+    <a href="#workflow">Workflow</a> •
+    <a href="#setup">Setup</a> •
+    <a href="#results">Result</a>
+  </p>
+</p>
 
-This repository stores the source-of-truth documentation for MoonlumeVPN. It is designed to work with a separate Docusaurus engine repo that builds and deploys a static site.
+---
 
-Multilanguage is supported. Russian is the default language.
+## Overview
+This repository (`moonlumevpn-docs`) stores documentation content in Markdown.
 
-Architecture Overview
-We use two repositories:
+It works with a separate repository (`moonlumevpn-docs-site`) that:
+- builds the static docs site with Docusaurus,
+- publishes it to `https://docs.moonlumevpn.ru`,
+- exposes app-readable links from `registry/links.json` as `/links.json`.
 
-1) Docs Content Repo
-Name: `moonlumevpn-docs`
-Purpose: Store all documentation in Markdown
-Audience: Developers and contributors
-Source of truth for docs content
+Russian (`ru`) is the default locale. Additional languages are supported via `i18n/`.
 
-2) Docs Engine Repo
-Name: `moonlumevpn-docs-site`
-Built with Docusaurus
-Pulls content from `moonlumevpn-docs` during CI build
-Builds and deploys the static site
-Public URL: `https://docs.moonlumevpn.ru`
+## Architecture
+Two repositories are used:
 
-Workflow
-1. Update docs in `moonlumevpn-docs`
-2. GitHub Action in this repo triggers a rebuild in `moonlumevpn-docs-site`
-3. The site is rebuilt and deployed automatically
+1. `moonlumevpn-docs`
+- content-only repository
+- source of truth for docs
+- includes machine-readable links registry
 
-Repository Structure
-Russian is the default locale and lives in `docs/`.
-Additional locales live under `i18n/<locale>/docusaurus-plugin-content-docs/current/`.
+2. `moonlumevpn-docs-site`
+- Docusaurus engine and deployment repository
+- fetches this docs repo during CI
+- builds and deploys the public site
 
-Machine-readable app links registry lives at:
-`registry/links.json`
-This file is intended for bots/apps and currently contains the `legal` section.
-
+## Repository Structure
+```text
 moonlumevpn-docs/
-  docs/
-    privacy_policy.md
-    public_offer.md
-    terms_of_use.md
-  i18n/
-    en/
-      docusaurus-plugin-content-docs/
-        current/
-          privacy_policy.md
-          public_offer.md
-          terms_of_use.md
-  README.md
+├─ docs/
+│  └─ legal/
+│     ├─ _category_.json
+│     ├─ privacy_policy.md
+│     ├─ public_offer.md
+│     ├─ terms_of_use.md
+│     └─ referral_program.md
+├─ i18n/
+│  └─ en/
+│     └─ docusaurus-plugin-content-docs/
+│        └─ current/
+│           └─ legal/
+│              └─ _category_.json
+├─ registry/
+│  └─ links.json
+└─ README.md
+```
 
-Setup Instructions
+`registry/links.json` is intended for bots/apps and currently contains legal document routes.
 
-Step 1 - Create Repositories
-Create two repos in your GitHub org `moonlumevpn`:
-`moonlumevpn-docs`
-`moonlumevpn-docs-site`
+## Workflow
+1. Update docs in `moonlumevpn-docs` (this repo).
+2. Push to `production`.
+3. `.github/workflows/trigger.yml` sends `repository_dispatch` (`docs-update`) to `moonlumevpn-docs-site`.
+4. Engine repo rebuilds and deploys the site.
 
-Step 2 - Setup Docs Repository
-Keep default language docs inside `docs/`. Place translated docs under `i18n/<locale>/docusaurus-plugin-content-docs/current/`.
+## Setup
+### 1) Create Repositories
+Create both repositories in your GitHub organization:
+- `moonlumevpn-docs`
+- `moonlumevpn-docs-site`
 
-Step 3 - Setup Docusaurus Site
-Initialize Docusaurus:
-`npx create-docusaurus@latest moonlumevpn-docs-site classic`
-`cd moonlumevpn-docs-site`
-`npm install`
+### 2) Configure Docs Content Repo
+- Keep default language docs in `docs/`.
+- Keep translated docs in `i18n/<locale>/docusaurus-plugin-content-docs/current/`.
+- Maintain machine-readable links in `registry/links.json`.
 
-Update `docusaurus.config.ts` (or `.js`):
-`url: 'https://docs.moonlumevpn.ru'`
-`baseUrl: '/'`
-`organizationName: 'moonlumevpn'`
-`projectName: 'moonlumevpn-docs-site'`
+### 3) Bootstrap Docusaurus Engine Repo
+```bash
+npx create-docusaurus@latest moonlumevpn-docs-site classic
+cd moonlumevpn-docs-site
+npm install
+```
 
-Enable i18n (Russian default):
-`i18n: {`
-`  defaultLocale: 'ru',`
-`  locales: ['ru', 'en'],`
-`}`
+Set in `docusaurus.config.ts` (or `.js`):
+```ts
+url: 'https://docs.moonlumevpn.ru'
+baseUrl: '/'
+organizationName: 'moonlumevpn'
+projectName: 'moonlumevpn-docs-site'
 
-Step 4 - Add Docs Fetch in Build
-In the engine repo, configure GitHub Actions to pull this repo during build.
-Create `.github/workflows/deploy.yml`:
+i18n: {
+  defaultLocale: 'ru',
+  locales: ['ru', 'en'],
+}
+```
 
+### 4) Build Pipeline in Engine Repo
+Create `.github/workflows/deploy.yml` in `moonlumevpn-docs-site`:
+
+```yaml
 name: Build & Deploy Docs
 
 on:
@@ -90,14 +122,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout engine repo
         uses: actions/checkout@v4
 
       - name: Clone docs repo
-        run: |
-          git clone https://github.com/moonlumevpn/moonlumevpn-docs.git external-docs
+        run: git clone https://github.com/moonlumevpn/moonlumevpn-docs.git external-docs
 
       - name: Replace docs folder
         run: |
@@ -127,42 +157,34 @@ jobs:
         env:
           GIT_USER: github-actions
           USE_SSH: false
+```
 
-Step 5 - Trigger Rebuild from Docs Repo
-This repo contains the GitHub Action at `.github/workflows/trigger.yml` that sends a `repository_dispatch` event to the engine repo on every push to `production`.
+### 5) Configure Trigger Secret
+In `moonlumevpn-docs`:
+- `Settings` -> `Secrets and variables` -> `Actions`
+- add `REPO_TOKEN` with `repo` scope
 
-Step 6 - Add GitHub Token
-In `moonlumevpn-docs` repo:
-Settings -> Secrets -> Actions
-Add new secret: `REPO_TOKEN`
-Token permissions: `repo` (required to trigger workflows in a different repo)
+This repository uses that secret in `.github/workflows/trigger.yml` to notify the engine repo.
 
-Step 7 - Configure GitHub Pages
+### 6) Configure GitHub Pages + DNS
 In `moonlumevpn-docs-site`:
-Settings -> Pages
-Source: `gh-pages` branch
-Custom domain: `docs.moonlumevpn.ru`
+- `Settings` -> `Pages`
+- source: `gh-pages` branch
+- custom domain: `docs.moonlumevpn.ru`
 
-Step 8 - Configure DNS
-In your DNS provider:
-Type: `CNAME`
-Name: `docs`
-Value: `moonlumevpn.github.io`
+In DNS:
+- type: `CNAME`
+- host: `docs`
+- value: `moonlumevpn.github.io`
 
-Final Result
-Docs live in `moonlumevpn-docs`
-Site auto-updates on every push
-Hosted at `https://docs.moonlumevpn.ru/`
-Multilanguage docs work with Russian as the default locale
-Apps can consume the registry from `https://docs.moonlumevpn.ru/links.json`
+## Result
+- Docs are edited in `moonlumevpn-docs`.
+- Public docs are available at `https://docs.moonlumevpn.ru/`.
+- App links are available at `https://docs.moonlumevpn.ru/links.json`.
+- Russian is default locale, with i18n-ready structure for more languages.
 
-Notes and Best Practices
-Keep docs clean and structured
-Use PRs for documentation changes
-Add linting (optional: `markdownlint`)
-Version docs later using Docusaurus versioning
-
-Optional Improvements
-Add preview builds for PRs
-Add search (Algolia or local search)
-Add CI checks for broken links
+## Good Practices
+- Keep doc structure clean and predictable.
+- Use PR-based review for content changes.
+- Add optional checks like `markdownlint` and broken-link validation.
+- Add preview deployments for PRs when needed.
