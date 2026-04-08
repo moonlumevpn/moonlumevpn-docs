@@ -1,6 +1,7 @@
 name: Trigger Docs Site Rebuild
 
 on:
+  workflow_dispatch:
   push:
     branches: [production]
 
