@@ -2,6 +2,8 @@ MoonlumeVPN Documentation Platform
 
 This repository stores the source-of-truth documentation for MoonlumeVPN. It is designed to work with a separate Docusaurus engine repo that builds and deploys a static site.
 
+Multilanguage is supported. Russian is the default language.
+
 Architecture Overview
 We use two repositories:
 
@@ -24,13 +26,21 @@ Workflow
 3. The site is rebuilt and deployed automatically
 
 Repository Structure
-All documentation must live inside `docs/`.
+Russian is the default locale and lives in `docs/`.
+Additional locales live under `i18n/<locale>/docusaurus-plugin-content-docs/current/`.
 
 moonlumevpn-docs/
   docs/
     privacy_policy.md
     public_offer.md
     terms_of_use.md
+  i18n/
+    en/
+      docusaurus-plugin-content-docs/
+        current/
+          privacy_policy.md
+          public_offer.md
+          terms_of_use.md
   README.md
 
 Setup Instructions
@@ -41,7 +51,7 @@ Create two repos in your GitHub org `moonlumevpn`:
 `moonlumevpn-docs-site`
 
 Step 2 - Setup Docs Repository
-Keep all documentation inside `docs/`. This repo is the single source of truth.
+Keep default language docs inside `docs/`. Place translated docs under `i18n/<locale>/docusaurus-plugin-content-docs/current/`.
 
 Step 3 - Setup Docusaurus Site
 Initialize Docusaurus:
@@ -49,11 +59,17 @@ Initialize Docusaurus:
 `cd moonlumevpn-docs-site`
 `npm install`
 
-Update `docusaurus.config.js`:
+Update `docusaurus.config.ts` (or `.js`):
 `url: 'https://docs.moonlumevpn.ru'`
 `baseUrl: '/'`
 `organizationName: 'moonlumevpn'`
 `projectName: 'moonlumevpn-docs-site'`
+
+Enable i18n (Russian default):
+`i18n: {`
+`  defaultLocale: 'ru',`
+`  locales: ['ru', 'en'],`
+`}`
 
 Step 4 - Add Docs Fetch in Build
 In the engine repo, configure GitHub Actions to pull this repo during build.
@@ -63,7 +79,7 @@ name: Build & Deploy Docs
 
 on:
   push:
-    branches: [main]
+    branches: [production]
   repository_dispatch:
     types: [docs-update]
 
@@ -84,6 +100,13 @@ jobs:
           rm -rf docs
           mv external-docs/docs ./docs
 
+      - name: Replace i18n folder if present
+        run: |
+          if [ -d external-docs/i18n ]; then
+            rm -rf i18n
+            mv external-docs/i18n ./i18n
+          fi
+
       - name: Install dependencies
         run: npm ci
 
@@ -97,7 +120,7 @@ jobs:
           USE_SSH: false
 
 Step 5 - Trigger Rebuild from Docs Repo
-This repo contains the GitHub Action at `.github/workflows/trigger.yml` that sends a `repository_dispatch` event to the engine repo on every push to `main`.
+This repo contains the GitHub Action at `.github/workflows/trigger.yml` that sends a `repository_dispatch` event to the engine repo on every push to `production`.
 
 Step 6 - Add GitHub Token
 In `moonlumevpn-docs` repo:
@@ -121,6 +144,7 @@ Final Result
 Docs live in `moonlumevpn-docs`
 Site auto-updates on every push
 Hosted at `https://docs.moonlumevpn.ru/`
+Multilanguage docs work with Russian as the default locale
 
 Notes and Best Practices
 Keep docs clean and structured
