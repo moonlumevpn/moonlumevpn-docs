@@ -188,3 +188,16 @@ In DNS:
 - Use PR-based review for content changes.
 - Add optional checks like `markdownlint` and broken-link validation.
 - Add preview deployments for PRs when needed.
+
+## Image URL Template (Optional)
+Use direct image links by default:
+
+```md
+![Alt text](https://i.ibb.co/<image-id>/image.png)
+```
+
+If image optimization/proxying is needed again, use this `wsrv.nl` template:
+
+```md
+![Alt text](https://wsrv.nl/?url=i.ibb.co/<image-id>/image.png&w=300&output=webp&q=80)
+```
