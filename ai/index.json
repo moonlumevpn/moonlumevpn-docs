@@ -1,0 +1,16 @@
+{
+  "project": "moonlumevpn-docs",
+  "default_branch": "production",
+  "default_locale": "ru",
+  "key_paths": {
+    "docs_root": "docs/",
+    "i18n_root": "i18n/",
+    "registry_links": "registry/links.json",
+    "agent_rules": "AGENTS.md",
+    "project_readme": "README.md"
+  },
+  "working_notes": [
+    "This repo is content-only; the site build/deploy is handled in moonlumevpn-docs-site.",
+    "Pushes to production trigger a rebuild in the engine repo via GitHub Actions."
+  ]
+}
