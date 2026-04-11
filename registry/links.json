@@ -8,6 +8,7 @@
       "referral_program": "/docs/legal/referral_program"
     },
     "install": {
+      "chooser": "/docs/install",
       "happ": {
         "chooser": "/docs/install/happ",
         "android": "/docs/install/happ/install_android",
