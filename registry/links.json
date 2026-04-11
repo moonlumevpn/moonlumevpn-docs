@@ -1,11 +1,25 @@
 {
-  "version": "2026-04-08",
+  "version": "2026-04-11",
   "sections": {
     "legal": {
       "privacy_policy": "/docs/legal/privacy_policy",
       "terms_of_use": "/docs/legal/terms_of_use",
       "public_offer": "/docs/legal/public_offer",
       "referral_program": "/docs/legal/referral_program"
+    },
+    "install": {
+      "happ": {
+        "chooser": "/docs/install/happ",
+        "android": "/docs/install/happ/install_android",
+        "ios": "/docs/install/happ/install_ios",
+        "macos": "/docs/install/happ/install_macos",
+        "windows": "/docs/install/happ/install_windows",
+        "android_tv": "/docs/install/happ/install_android_tv",
+        "apple_tv": "/docs/install/happ/install_apple_tv",
+        "linux": "/docs/install/happ/install_linux",
+        "ping": "/docs/install/happ/ping",
+        "common_errors": "/docs/install/happ/common_errors"
+      }
     }
   }
 }
