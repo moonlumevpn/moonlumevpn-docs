@@ -18,6 +18,7 @@ sidebar_position: 1
 ## Дополнительно
 - [Проверка Ping в Happ](./ping.md)
 - [Частые ошибки в Happ](./common_errors.md)
+- [Обновление подписки в Happ](./update_subscription.md)
 
 ## Как подключать подписку
 Рекомендуется:
