@@ -10,6 +10,7 @@ This repository supports human and AI-assisted documentation work.
 ## Working Rules
 - Prefer direct Markdown edits over structural churn.
 - Keep routes and slugs stable unless the task explicitly requires route changes.
+- Keep `registry/links.json` in sync with any docs structure change, including new, removed, renamed, or re-routed pages.
 - When adding or changing legal docs, verify matching links in `registry/links.json`.
 - Do not commit local cache artifacts.
 

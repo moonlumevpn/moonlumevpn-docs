@@ -6,7 +6,7 @@
 
 ## Stable Conventions
 - Primary content location: `docs/`
-- Legal routes must stay aligned with `registry/links.json`
+- `registry/links.json` must stay aligned with the current docs route structure
 - Default locale is Russian (`ru`)
 - Main branch for production updates: `production`
 

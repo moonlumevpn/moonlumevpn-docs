@@ -8,7 +8,6 @@
       "referral_program": "/docs/legal/referral_program"
     },
     "install": {
-      "chooser": "/docs/install",
       "happ": {
         "chooser": "/docs/install/happ",
         "android": "/docs/install/happ/install_android",
@@ -19,8 +18,13 @@
         "apple_tv": "/docs/install/happ/install_apple_tv",
         "linux": "/docs/install/happ/install_linux",
         "ping": "/docs/install/happ/ping",
-        "common_errors": "/docs/install/happ/common_errors"
+        "common_errors": "/docs/install/happ/common_errors",
+        "update_subscription": "/docs/install/happ/update_subscription"
       }
+    },
+    "payments": {
+      "telegram_bot": "/docs/payments/telegram_bot",
+      "web": "/docs/payments/web"
     }
   }
 }
